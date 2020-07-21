@@ -6,10 +6,10 @@ import {
     Request,
     Simulation as ISimulation,
     SimulationRequest,
-    SimulationRequestResult,
+    SimulationResponseResult,
     SimulationStats,
     SimulationType,
-    SimulationRequestError,
+    SimulationResponseError,
     BackendSuccess,
     BackendError
 } from '@ffknob/elastic-apm-demo-shared';
@@ -55,13 +55,8 @@ const Simulation: React.FC = () => {
 
         if (simulation.requests$) {
             simulation.requests$.subscribe(
-                (
-                    requests: Request<
-                        SimulationRequest,
-                        | BackendSuccess<SimulationRequestResult>
-                        | BackendError<SimulationRequestError>
-                    >[]
-                ) => updateSimulation({ ...simulation, requests })
+                (requests: Request<SimulationRequest>[]) =>
+                    updateSimulation({ ...simulation, requests })
             );
         }
 

@@ -1193,9 +1193,9 @@
     uuid "^3.1.0"
 
 "@ffknob/elastic-apm-demo-shared@^1.0.0":
-  version "1.0.8"
-  resolved "https://npm.pkg.github.com/download/@ffknob/elastic-apm-demo-shared/1.0.8/f35aea29dc1d808a9c999d721906a796154306f0fb1779222c47b70730732bd0#d148ea818b378a851a23f5b62b9172a16be7cbac"
-  integrity sha512-4NDjExfUFbUCsCZ34KXS8Q4N8Tb0axZQoAXtxc/g+eOh83wQ5w0IbcR7Gkn0htUWL5bus6JchXgNgxH2daf+RA==
+  version "1.0.14"
+  resolved "https://npm.pkg.github.com/download/@ffknob/elastic-apm-demo-shared/1.0.14/131d0c6bbf9509615c14fc741ebcb97644f2e971f88e236beda87ad73b655d74#f8a0bc26038bb3f5fb4d7e7f94988d3dd72b1b2f"
+  integrity sha512-RrBFErqkgOmViVcujaYc1WCsKnBlyw6vw3DxqZEF9eKrSToK5q8wCPXAz5r6QcOUohgSncppiAXHYQgAoXcogA==
 
 "@hapi/address@2.x.x":
   version "2.1.4"

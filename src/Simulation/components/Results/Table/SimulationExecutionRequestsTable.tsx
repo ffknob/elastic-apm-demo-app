@@ -11,16 +11,13 @@ import {
     Request,
     Simulation,
     SimulationRequest,
-    SimulationRequestResult,
-    BackendSuccess,
     BackendError,
-    SimulationRequestError,
+    SimulationResponseError,
     BackendResponseMetadata,
     HostMetadata,
-    KubernetesMetadata
+    KubernetesMetadata,
+    GenericError
 } from '@ffknob/elastic-apm-demo-shared';
-
-import { AVAILABLE_SIMULATIONS } from '../../Simulator';
 
 import SimulationContext from '../../../../shared/context/SimulationContext';
 import ISimulationContext from '../../../../shared/interfaces/SimulationContext';
@@ -42,7 +39,7 @@ interface SimulationExecutionRequestsTableRow {
     endpoint: string;
     statusCode?: number;
     statusMessage?: string;
-    errors?: SimulationRequestError[];
+    errors?: SimulationResponseError<any>;
     metadata?: BackendResponseMetadata;
 }
 
@@ -67,21 +64,13 @@ const SimulationExecutionRequestsTable: React.FC<SimulationExecutionRequestsTabl
         | undefined = simulationContext.simulations.find(
         s => s.id === simulationId
     );
-    const requests: Request<
-        SimulationRequest,
-        | BackendSuccess<SimulationRequestResult>
-        | BackendError<SimulationRequestError>
-    >[] = simulation!.requests!;
+    const requests: Request<SimulationRequest>[] = simulation!.requests!;
 
     useEffect(() => {
         if (requests) {
             const pageItems: SimulationExecutionRequestsTableRow[] = requests.map(
                 (
-                    request: Request<
-                        SimulationRequest,
-                        | BackendSuccess<SimulationRequestResult>
-                        | BackendError<SimulationRequestError>
-                    >,
+                    request: Request<SimulationRequest>,
                     index: number
                 ): SimulationExecutionRequestsTableRow => {
                     const pageItem: SimulationExecutionRequestsTableRow = {
@@ -96,10 +85,9 @@ const SimulationExecutionRequestsTable: React.FC<SimulationExecutionRequestsTabl
                         pageItem.statusMessage = request.response.statusMessage;
 
                         if (!request.response.success) {
-                            pageItem.errors = (request.response
-                                .body as BackendError<
-                                SimulationRequestError
-                            >).errors!;
+                            pageItem.errors = (request.response as BackendError<
+                                SimulationResponseError<any>
+                            >).data!;
                         }
                     }
 
@@ -265,7 +253,7 @@ const SimulationExecutionRequestsTable: React.FC<SimulationExecutionRequestsTabl
     const renderRequestResult = (
         statusCode?: number,
         statusMessage?: string,
-        errors?: SimulationRequestError[]
+        simulationResponseError?: SimulationResponseError<any>
     ) => {
         if (!statusCode || !statusMessage) return '';
 
@@ -284,18 +272,19 @@ const SimulationExecutionRequestsTable: React.FC<SimulationExecutionRequestsTabl
         }
 
         let errorList = null;
-        if (errors) {
+        if (simulationResponseError && simulationResponseError.errors) {
             errorList = (
                 <EuiListGroup wrapText={true}>
-                    {errors.map((e: SimulationRequestError, index: number) =>
-                        e.category !== 'http' ? (
-                            <EuiListGroupItem
-                                key={index}
-                                size="s"
-                                iconType="alert"
-                                label={e.message}
-                            />
-                        ) : null
+                    {simulationResponseError.errors.map(
+                        (e: GenericError<any>, index: number) =>
+                            e.category !== 'http' ? (
+                                <EuiListGroupItem
+                                    key={index}
+                                    size="s"
+                                    iconType="alert"
+                                    label={e.message}
+                                />
+                            ) : null
                     )}
                 </EuiListGroup>
             );

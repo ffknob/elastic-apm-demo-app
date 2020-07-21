@@ -8,26 +8,18 @@ import {
     Request,
     Simulation,
     SimulationRequest,
-    SimulationRequestResult,
-    SimulationRequestError
+    SimulationResponseResult,
+    SimulationResponseError
 } from '@ffknob/elastic-apm-demo-shared';
 
 import Api from './Api';
 
 export const simulate = (
     simulation: Simulation
-): Request<
-    SimulationRequest,
-    | BackendSuccess<SimulationRequestResult>
-    | BackendError<SimulationRequestError>
-> => {
+): Request<SimulationRequest> => {
     const endpoint = `/simulate/${simulation.type}`;
 
-    const request: Request<
-        SimulationRequest,
-        | BackendSuccess<SimulationRequestResult>
-        | BackendError<SimulationRequestError>
-    > = {
+    const request: Request<SimulationRequest> = {
         id: uuid(),
         request: {
             method: 'POST',
@@ -39,35 +31,22 @@ export const simulate = (
         }
     };
 
-    request.response$ = from<
-        Promise<
-            BackendResponse<
-                | BackendSuccess<SimulationRequestResult>
-                | BackendError<SimulationRequestError>
-            >
-        >
-    >(
+    request.response$ = from<Promise<BackendResponse>>(
         Api.post<
             SimulationRequest,
-            | BackendSuccess<SimulationRequestResult>
-            | BackendError<SimulationRequestError>
+            | BackendSuccess<SimulationResponseResult>
+            | BackendError<SimulationResponseError<any>>
         >(request)
             .then(({ status, statusText, data: { metadata, data } }: any) => {
-                const backendSuccess: BackendSuccess<SimulationRequestResult> = {
-                    data
-                };
-
-                const backendResponse: BackendResponse<BackendSuccess<
-                    SimulationRequestResult
-                >> = {
+                const backendSuccess: BackendSuccess<SimulationResponseResult> = {
                     success: true,
                     statusCode: status,
                     statusMessage: statusText,
-                    metadata: metadata,
-                    body: backendSuccess
+                    metadata,
+                    data
                 };
 
-                return backendResponse;
+                return backendSuccess;
             })
             .catch(
                 ({
@@ -77,21 +56,16 @@ export const simulate = (
                         data: { metadata, errors }
                     }
                 }: any) => {
-                    const backendError: BackendError<SimulationRequestError> = {
-                        errors: errors
-                    };
-
-                    const backendResponse: BackendResponse<BackendError<
-                        SimulationRequestError
+                    const backendError: BackendError<SimulationResponseError<
+                        any
                     >> = {
                         success: false,
                         statusCode: status,
                         statusMessage: statusText,
-                        metadata: metadata,
-                        body: backendError
+                        metadata
                     };
 
-                    return backendResponse;
+                    return backendError;
                 }
             )
     );

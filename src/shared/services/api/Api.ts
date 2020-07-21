@@ -13,7 +13,7 @@ export const get = <T>(endpoint: string): Promise<T> => {
     return axios.get(url);
 };
 
-export const post = <T, U>(request: Request<T, U>): Promise<U> => {
+export const post = <T, U>(request: Request<T>): Promise<U> => {
     const url = getApiUrl(request.request.endpoint);
     return axios.post(url, request.request.data, request.request.config);
 };

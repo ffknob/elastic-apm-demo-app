@@ -5,8 +5,8 @@ import { take } from 'rxjs/operators';
 import {
     Simulation,
     SimulationRequest,
-    SimulationRequestResult,
-    SimulationRequestError,
+    SimulationResponseResult,
+    SimulationResponseError,
     SimulationStats,
     SimulationType,
     Request,
@@ -17,13 +17,7 @@ import {
 
 import { simulate } from '../api';
 
-const createRequest = (
-    simulation: Simulation
-): Request<
-    SimulationRequest,
-    | BackendSuccess<SimulationRequestResult>
-    | BackendError<SimulationRequestError>
-> => {
+const createRequest = (simulation: Simulation): Request<SimulationRequest> => {
     simulation.stats!.total =
         simulation.simulationRequest?.parameters.numberOfRequests;
     simulation.stats!.sent = simulation.stats!.sent! + 1;
@@ -33,15 +27,8 @@ const createRequest = (
 
 const updateStats = (
     simulation: Simulation,
-    simulationRequest: Request<
-        SimulationRequest,
-        | BackendSuccess<SimulationRequestResult>
-        | BackendError<SimulationRequestError>
-    >,
-    backendResponse: BackendResponse<
-        | BackendSuccess<SimulationRequestResult>
-        | BackendError<SimulationRequestError>
-    >
+    simulationRequest: Request<SimulationRequest>,
+    backendResponse: BackendResponse
 ) => {
     simulation.stats!.completed! = simulation!.stats!.completed! + 1;
 
@@ -81,15 +68,15 @@ const updateStats = (
 
     /*if (backendResponse.success) {
         const response: BackendResponse<BackendSuccess<
-            SimulationRequestResult
+            SimulationResponseResult
         >> = backendResponse as BackendResponse<
-            BackendSuccess<SimulationRequestResult>
+            BackendSuccess<SimulationResponseResult>
         >;
     } else {
         const response: BackendResponse<BackendError<
-            SimulationRequestResult
+            SimulationResponseResult
         >> = backendResponse as BackendResponse<
-            BackendError<SimulationRequestResult>
+            BackendError<SimulationResponseResult>
         >;
     }
          */
@@ -105,13 +92,7 @@ export const executeSimulation = (
         type: simulationType,
         simulationRequest: simulationRequest,
         requests: [],
-        requests$: new Subject<
-            Request<
-                SimulationRequest,
-                | BackendSuccess<SimulationRequestResult>
-                | BackendError<SimulationRequestError>
-            >[]
-        >(),
+        requests$: new Subject<Request<SimulationRequest>[]>(),
         stats: {
             total: 0,
             sent: 0,
@@ -134,18 +115,12 @@ export const executeSimulation = (
             const request = createRequest(simulation);
 
             request.response$!.subscribe(
-                (
-                    response: BackendResponse<
-                        BackendSuccess<SimulationRequestResult>
-                    >
-                ) => {
+                (response: BackendResponse) => {
                     request.response = response;
 
                     updateStats(simulation, request, response);
                 },
-                (
-                    err: BackendResponse<BackendError<SimulationRequestError>>
-                ) => {
+                (err: BackendResponse) => {
                     request.response = err;
 
                     updateStats(simulation, request, err);
