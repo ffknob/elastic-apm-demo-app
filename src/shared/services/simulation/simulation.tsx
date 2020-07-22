@@ -5,13 +5,9 @@ import { take } from 'rxjs/operators';
 import {
     Simulation,
     SimulationRequest,
-    SimulationResponseResult,
-    SimulationResponseError,
     SimulationStats,
     SimulationType,
     Request,
-    BackendSuccess,
-    BackendError,
     BackendResponse
 } from '@ffknob/elastic-apm-demo-shared';
 

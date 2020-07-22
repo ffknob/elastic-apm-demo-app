@@ -53,7 +53,7 @@ export const simulate = (
                     response: {
                         status,
                         statusText,
-                        data: { metadata, errors }
+                        data: { metadata, statusMessage, errors }
                     }
                 }: any) => {
                     const backendError: BackendError<SimulationResponseError<
@@ -61,7 +61,7 @@ export const simulate = (
                     >> = {
                         success: false,
                         statusCode: status,
-                        statusMessage: statusText,
+                        statusMessage: `${statusText} (${statusMessage})`,
                         metadata
                     };
 
