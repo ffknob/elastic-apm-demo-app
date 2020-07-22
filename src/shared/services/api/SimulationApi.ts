@@ -37,17 +37,23 @@ export const simulate = (
             | BackendSuccess<SimulationResponseResult>
             | BackendError<SimulationResponseError<any>>
         >(request)
-            .then(({ status, statusText, data: { metadata, data } }: any) => {
-                const backendSuccess: BackendSuccess<SimulationResponseResult> = {
-                    success: true,
-                    statusCode: status,
-                    statusMessage: statusText,
-                    metadata,
-                    data
-                };
+            .then(
+                ({
+                    status,
+                    statusText,
+                    data: { metadata, statusMessage, data }
+                }: any) => {
+                    const backendSuccess: BackendSuccess<SimulationResponseResult> = {
+                        success: true,
+                        statusCode: status,
+                        statusMessage: `${statusText} (${statusMessage})`,
+                        metadata,
+                        data
+                    };
 
-                return backendSuccess;
-            })
+                    return backendSuccess;
+                }
+            )
             .catch(
                 ({
                     response: {
