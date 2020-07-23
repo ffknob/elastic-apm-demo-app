@@ -6,12 +6,8 @@ import {
     Request,
     Simulation as ISimulation,
     SimulationRequest,
-    SimulationResponseResult,
     SimulationStats,
-    SimulationType,
-    SimulationResponseError,
-    BackendSuccess,
-    BackendError
+    SimulationType
 } from '@ffknob/elastic-apm-demo-shared';
 
 import { Page } from '../../shared/layout/Page';
