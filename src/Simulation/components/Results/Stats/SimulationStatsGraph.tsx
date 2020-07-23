@@ -7,11 +7,14 @@ import {
     Axis,
     LineSeries,
     niceTimeFormatByDay,
-    timeFormatter
+    timeFormatter,
+    DomainRange
 } from '@elastic/charts';
+import { Domain } from '@elastic/charts/dist/utils/domain';
 import '@elastic/charts/dist/theme_light.css';
 
 import SimulationStatsGraphControls from './SimulationStatsGraphControls';
+
 export interface SimulationStatsGraphSeries {
     id: string;
     name: string;
@@ -25,16 +28,37 @@ export interface SimulationStatsGraphProps {
     };
 }
 
+const GRAPH_SIZE_WINDOW: number = 300000; // 5 minutes
+const AUTO_REFRESH_INTERVAL: number = 1000; // 1 second
+
 const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
     props: SimulationStatsGraphProps
 ) => {
     const { simulationStatsGraphSeries } = props;
 
     const [hasSimulationData, setHasSimulationData] = useState<boolean>(false);
+    const [xAxisDomain, setXAxisDomain] = useState<Domain | DomainRange>({
+        min: new Date().getTime() - GRAPH_SIZE_WINDOW
+    });
     const [xAxisFilter, setXAxisFilter] = useState<[number, number] | null>(
         null
     );
     const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
+
+    useEffect(() => {
+        console.log('useEffect');
+        if (autoRefresh) {
+            const interval = setInterval(() => {
+                const date: Date = new Date();
+                const min: number = date.getTime() - GRAPH_SIZE_WINDOW;
+                const max: number = date.getTime();
+
+                setXAxisDomain({ min, max });
+            }, AUTO_REFRESH_INTERVAL);
+
+            return () => clearInterval(interval);
+        }
+    }, [autoRefresh]);
 
     useEffect(() => {
         if (
@@ -50,12 +74,14 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
 
     const xAxisFilterHandler = (x: [number, number] | null) => {
         setXAxisFilter(x);
+        setAutoRefresh(false);
     };
 
     const xAxisFilterRemovedHandler = () => setXAxisFilter(null);
 
     const autoRefreshChangeHandler = (checked: boolean) => {
         setAutoRefresh(checked);
+        setXAxisFilter(null);
     };
 
     const noData: React.ReactElement = <></>;
@@ -67,6 +93,7 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
                         showLegend
                         legendPosition="bottom"
                         onBrushEnd={({ x }) => (x ? setXAxisFilter(x) : null)}
+                        xDomain={xAxisDomain}
                     />
                     <Axis
                         title="Measurements"
