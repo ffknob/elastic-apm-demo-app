@@ -29,7 +29,7 @@ const SimulationStatsGraphControls: React.FC<SimulationStatsGraphControlsProps> 
 
     return (
         <EuiFlexGroup
-            direction="row"
+            direction="column"
             alignItems="flexStart"
             justifyContent="flexStart">
             <EuiFlexItem grow={false}>

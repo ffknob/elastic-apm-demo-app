@@ -28,7 +28,7 @@ export interface SimulationStatsGraphProps {
     };
 }
 
-const GRAPH_SIZE_WINDOW: number = 300000; // 5 minutes
+const GRAPH_SIZE_WINDOW: number = 60000; // 1 minute
 const AUTO_REFRESH_INTERVAL: number = 1000; // 1 second
 
 const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
@@ -101,9 +101,9 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
 
     const noData: React.ReactElement = <></>;
     const graph: React.ReactElement = (
-        <EuiFlexGroup direction="column">
-            <EuiFlexItem>
-                <Chart size={{ height: 200 }}>
+        <EuiFlexGroup direction="row">
+            <EuiFlexItem grow={true}>
+                <Chart size={{ height: 300 }}>
                     <Settings
                         showLegend
                         legendPosition="bottom"
@@ -143,7 +143,7 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
                     )}
                 </Chart>
             </EuiFlexItem>
-            <EuiFlexItem>
+            <EuiFlexItem grow={false}>
                 <SimulationStatsGraphControls
                     onAutoRefreshChanged={autoRefreshChangeHandler}
                     onXAxisFilterRemoved={xAxisFilterRemovedHandler}
