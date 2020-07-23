@@ -46,14 +46,9 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
     const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log('useEffect');
         if (autoRefresh) {
             const interval = setInterval(() => {
-                const date: Date = new Date();
-                const min: number = date.getTime() - GRAPH_SIZE_WINDOW;
-                const max: number = date.getTime();
-
-                setXAxisDomain({ min, max });
+                resetXAxisDomain();
             }, AUTO_REFRESH_INTERVAL);
 
             return () => clearInterval(interval);
@@ -72,12 +67,32 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
         }
     }, [simulationStatsGraphSeries]);
 
+    const isInsideTimeWindow = (
+        m: number,
+        timeWindow: [number, number]
+    ): boolean => {
+        return (m >= timeWindow[0] && m <= timeWindow[1]) || false;
+    };
+
+    const resetXAxisDomain = () => {
+        const date: Date = new Date();
+        const min: number = date.getTime() - GRAPH_SIZE_WINDOW;
+        const max: number = date.getTime();
+        setXAxisDomain({ min, max });
+    };
+
     const xAxisFilterHandler = (x: [number, number] | null) => {
-        setXAxisFilter(x);
+        if (x !== null) {
+            setXAxisFilter(x);
+            setXAxisDomain({ min: x[0], max: x[1] });
+        }
         setAutoRefresh(false);
     };
 
-    const xAxisFilterRemovedHandler = () => setXAxisFilter(null);
+    const xAxisFilterRemovedHandler = () => {
+        setXAxisFilter(null);
+        resetXAxisDomain();
+    };
 
     const autoRefreshChangeHandler = (checked: boolean) => {
         setAutoRefresh(checked);
@@ -92,8 +107,10 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
                     <Settings
                         showLegend
                         legendPosition="bottom"
-                        onBrushEnd={({ x }) => (x ? setXAxisFilter(x) : null)}
                         xDomain={xAxisDomain}
+                        onBrushEnd={({ x }) =>
+                            x ? xAxisFilterHandler(x) : null
+                        }
                     />
                     <Axis
                         title="Measurements"
@@ -114,8 +131,7 @@ const SimulationStatsGraph: React.FC<SimulationStatsGraphProps> = (
                                     k
                                 ].data.filter((m: [number, number]) =>
                                     xAxisFilter
-                                        ? m[0] >= xAxisFilter[0] &&
-                                          m[0] <= xAxisFilter[1]
+                                        ? isInsideTimeWindow(m[0], xAxisFilter)
                                         : true
                                 )}
                                 xScaleType="time"
