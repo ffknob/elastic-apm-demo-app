@@ -4,15 +4,15 @@
   "version": "0.1.0",
   "author": "Flávio Franco Knob <ffknob@gmail.com> (http://ffknob.com)",
   "license": "ISC",
-  "homepage": "https://github.com/ffknob/elastic-apm-demo-app#readme",
   "bugs": {
     "url": "https://github.com/ffknob/elastic-apm-demo-app/issues"
   },
   "keywords": [],
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
+    "clean": "rm -rf dist/",
     "build": "react-scripts build",
+    "start": "react-scripts start",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src/**/*.ts",
     "test": "react-scripts test",
@@ -44,7 +44,6 @@
     "uuid": "^7.0.3"
   },
   "devDependencies": {
-    "eslint": "^7.5.0",
     "prettier": "^2.0.5"
   },
   "eslintConfig": {
