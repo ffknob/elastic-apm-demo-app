@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "author": "Flávio Franco Knob <ffknob@gmail.com> (http://ffknob.com)",
   "license": "ISC",
-  "homepage": "https://github.com/ffknob/elastic-apm-demo-shared#readme",
+  "homepage": "https://github.com/ffknob/elastic-apm-demo-app#readme",
   "bugs": {
-    "url": "https://github.com/ffknob/elastic-apm-demo-shared/issues"
+    "url": "https://github.com/ffknob/elastic-apm-demo-app/issues"
   },
   "keywords": [],
   "private": true,
