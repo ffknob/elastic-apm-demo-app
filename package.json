@@ -1,6 +1,14 @@
 {
-  "name": "frontend",
+  "name": "elastic-apm-demo-app",
+  "description": "Elastic APM demo: App",
   "version": "0.1.0",
+  "author": "Flávio Franco Knob <ffknob@gmail.com> (http://ffknob.com)",
+  "license": "ISC",
+  "homepage": "https://github.com/ffknob/elastic-apm-demo-shared#readme",
+  "bugs": {
+    "url": "https://github.com/ffknob/elastic-apm-demo-shared/issues"
+  },
+  "keywords": [],
   "private": true,
   "scripts": {
     "start": "react-scripts start",
