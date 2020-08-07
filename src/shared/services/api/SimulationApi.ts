@@ -17,7 +17,7 @@ import Api from './Api';
 export const simulate = (
     simulation: Simulation
 ): Request<SimulationRequest> => {
-    const endpoint = `/simulate/${simulation.type}`;
+    const endpoint = `/simulation/${simulation.type}`;
 
     const request: Request<SimulationRequest> = {
         id: uuid(),
