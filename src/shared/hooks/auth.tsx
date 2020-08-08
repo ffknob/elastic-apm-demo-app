@@ -3,6 +3,7 @@ import { useContext, useState, useCallback, useEffect } from 'react';
 import {
     User,
     SignInInfo,
+    SocialSignInProvider,
     BackendError
 } from '@ffknob/elastic-apm-demo-shared';
 
@@ -111,7 +112,44 @@ const useAuth = () => {
         });
     }, [authContext, loading, user]);
 
-    return { user, setUser, isSignedIn, setIsSignedIn, signIn, signOut };
+    const socialSignIn = useCallback(
+        (provider: SocialSignInProvider): Promise<User> => {
+            return new Promise<User>((resolve, reject) => {
+                loading(true);
+
+                AuthApi.socialSignIn(provider).response$.subscribe(
+                    (user: User) => {
+                        loading(false);
+
+                        if (user) {
+                            setIsSignedIn(true);
+                            setUser(user);
+                            authContext.setUser(user);
+                            authContext.setIsSignedIn(true);
+                        }
+
+                        resolve(user);
+                    },
+                    (err: BackendError<any>) => {
+                        loading(false);
+
+                        reject(err);
+                    }
+                );
+            });
+        },
+        [authContext, loading]
+    );
+
+    return {
+        user,
+        setUser,
+        isSignedIn,
+        setIsSignedIn,
+        signIn,
+        signOut,
+        socialSignIn
+    };
 };
 
 export default useAuth;

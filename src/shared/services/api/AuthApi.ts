@@ -1,11 +1,17 @@
+import { from } from 'rxjs';
+import { v4 as uuid } from 'uuid';
+
 import Api from './Api';
 
 import {
-    BackendResponse,
     User,
+    Request,
+    BackendSuccess,
+    BackendError,
+    BackendResponse,
     SignInInfo,
-    SignInResult,
-    SignOutResult
+    GenericError,
+    SocialSignInProvider
 } from '@ffknob/elastic-apm-demo-shared';
 
 export const signIn = (signInInfo: SignInInfo): Promise<User> => {
@@ -42,4 +48,62 @@ export const signOut = (user: User): Promise<User> => {
     */
 };
 
-export default { signIn, signOut };
+export const socialSignIn = (provider: SocialSignInProvider): Request<null> => {
+    const endpoint = `/auth/${provider}`;
+
+    const request: Request<null> = {
+        id: uuid(),
+        request: {
+            method: 'POST',
+            endpoint: endpoint,
+            data: null
+        },
+        time: {
+            start: new Date()
+        }
+    };
+
+    request.response$ = from<Promise<BackendResponse>>(
+        Api.post<null, BackendSuccess<User> | BackendError<GenericError<any>>>(
+            request
+        )
+            .then(
+                ({
+                    status,
+                    statusText,
+                    data: { metadata, statusMessage, data }
+                }: any) => {
+                    const backendSuccess: BackendSuccess<User> = {
+                        success: true,
+                        statusCode: status,
+                        statusMessage: `${statusText} (${statusMessage})`,
+                        metadata,
+                        data
+                    };
+
+                    return backendSuccess;
+                }
+            )
+            .catch(
+                ({
+                    response: {
+                        status,
+                        statusText,
+                        data: { metadata, statusMessage, errors }
+                    }
+                }: any) => {
+                    const backendError: BackendError<GenericError<any>> = {
+                        success: false,
+                        statusCode: status,
+                        statusMessage: `${statusText} (${statusMessage})`
+                    };
+
+                    return backendError;
+                }
+            )
+    );
+
+    return request;
+};
+
+export default { signIn, signOut, socialSignIn };

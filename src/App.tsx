@@ -31,7 +31,8 @@ const App: React.FC = () => {
         isSignedIn,
         setIsSignedIn,
         signIn,
-        signOut
+        signOut,
+        socialSignIn
     } = useAuth();
 
     return (
@@ -48,7 +49,8 @@ const App: React.FC = () => {
                         setUser,
                         setIsSignedIn,
                         signIn,
-                        signOut
+                        signOut,
+                        socialSignIn
                     }}>
                     <Router>
                         <EuiFlexGroup direction="column">

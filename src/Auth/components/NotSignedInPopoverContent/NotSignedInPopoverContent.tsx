@@ -15,19 +15,24 @@ import {
 import { useAuth } from '../../../shared/hooks';
 
 import './NotSignedInPopoverContent.scss';
+import { SocialSignInProvider } from '@ffknob/elastic-apm-demo-shared';
 
 export interface NotSignedInPopoverContentProps {}
 
 const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
     props: NotSignedInPopoverContentProps
 ) => {
-    const { signIn } = useAuth();
+    const { signIn, socialSignIn } = useAuth();
 
     const [username, setUsername] = useState<string | undefined>();
     const [password, setPassword] = useState<string | undefined>();
     const [keepMeSignedIn, setKeepMeSignedIn] = useState<boolean>(false);
 
     const signInButtonHandler = () => {};
+
+    const socialSignInHandler = (provider: SocialSignInProvider) => {
+        socialSignIn(provider);
+    };
 
     return (
         <EuiFormFieldset legend={{ children: 'Sign in' }}>
@@ -70,7 +75,7 @@ const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
                         backgroundColor: '#007BB6',
                         borderColor: '#007BB6'
                     }}
-                    onClick={() => console.log('Linked In')}>
+                    onClick={() => socialSignInHandler('linkedin')}>
                     Linked In
                 </EuiButton>
             </EuiFormRow>
@@ -82,7 +87,7 @@ const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
                         backgroundColor: '#DD4B39',
                         borderColor: '#DD4B39'
                     }}
-                    onClick={() => console.log('Google')}>
+                    onClick={() => socialSignInHandler('google')}>
                     Google
                 </EuiButton>
             </EuiFormRow>
@@ -91,7 +96,7 @@ const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
                     fill
                     fullWidth
                     style={{ backgroundColor: 'black' }}
-                    onClick={() => console.log('Github')}>
+                    onClick={() => socialSignInHandler('github')}>
                     Github
                 </EuiButton>
             </EuiFormRow>

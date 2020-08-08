@@ -1,6 +1,10 @@
 import { createContext } from 'react';
 
-import { User, SignInInfo } from '@ffknob/elastic-apm-demo-shared';
+import {
+    User,
+    SignInInfo,
+    SocialSignInProvider
+} from '@ffknob/elastic-apm-demo-shared';
 
 import IAuthContext from '../interfaces/AuthContext';
 
@@ -13,6 +17,9 @@ const AuthContext = createContext<IAuthContext>({
         return new Promise<User>((resolve, reject) => {});
     },
     signOut: (): Promise<User> => {
+        return new Promise<User>((resolve, reject) => {});
+    },
+    socialSignIn: (provider: SocialSignInProvider) => {
         return new Promise<User>((resolve, reject) => {});
     }
 });

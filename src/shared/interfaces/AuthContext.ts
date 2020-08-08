@@ -1,4 +1,8 @@
-import { SignInInfo, User } from '@ffknob/elastic-apm-demo-shared';
+import {
+    SignInInfo,
+    User,
+    SocialSignInProvider
+} from '@ffknob/elastic-apm-demo-shared';
 
 export default interface AuthContext {
     user: User | null;
@@ -7,4 +11,5 @@ export default interface AuthContext {
     setIsSignedIn: (isSignedIn: boolean) => void;
     signIn: (signInInfo: SignInInfo) => Promise<User>;
     signOut: () => Promise<User>;
+    socialSignIn: (provider: SocialSignInProvider) => Promise<User>;
 }
