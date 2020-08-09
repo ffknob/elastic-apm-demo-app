@@ -31,7 +31,9 @@ const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
     const signInButtonHandler = () => {};
 
     const socialSignInHandler = (provider: SocialSignInProvider) => {
-        socialSignIn(provider);
+        socialSignIn(provider)
+            .then(html => console.log(html))
+            .catch(err => console.log(err));
     };
 
     return (

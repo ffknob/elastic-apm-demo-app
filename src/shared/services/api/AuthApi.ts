@@ -64,26 +64,20 @@ export const socialSignIn = (provider: SocialSignInProvider): Request<null> => {
     };
 
     request.response$ = from<Promise<BackendResponse>>(
-        Api.post<null, BackendSuccess<User> | BackendError<GenericError<any>>>(
-            request
-        )
-            .then(
-                ({
-                    status,
-                    statusText,
-                    data: { metadata, statusMessage, data }
-                }: any) => {
-                    const backendSuccess: BackendSuccess<User> = {
-                        success: true,
-                        statusCode: status,
-                        statusMessage: `${statusText} (${statusMessage})`,
-                        metadata,
-                        data
-                    };
+        Api.post<
+            null,
+            BackendSuccess<HTMLDocument> | BackendError<GenericError<any>>
+        >(request)
+            .then(({ status, statusText, data }: any) => {
+                const backendSuccess: BackendSuccess<User> = {
+                    success: true,
+                    statusCode: status,
+                    statusMessage: `${statusText} (${statusText})`,
+                    data
+                };
 
-                    return backendSuccess;
-                }
-            )
+                return backendSuccess;
+            })
             .catch(
                 ({
                     response: {

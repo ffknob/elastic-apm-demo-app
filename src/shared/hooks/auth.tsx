@@ -4,7 +4,8 @@ import {
     User,
     SignInInfo,
     SocialSignInProvider,
-    BackendError
+    BackendError,
+    BackendSuccess
 } from '@ffknob/elastic-apm-demo-shared';
 
 import AuthContext from '../context/AuthContext';
@@ -21,6 +22,9 @@ const useAuth = () => {
 
     const [user, setUser] = useState<User | null>(null);
     const [isSignedIn, setIsSignedIn] = useState(false);
+    const [socialSignInPage, setSocialSignInPage] = useState<
+        HTMLDocument | undefined
+    >(undefined);
 
     if (!user && !isSignedIn) {
         const userLocalStorage: string | null = localStorage.getItem('user');
@@ -113,22 +117,20 @@ const useAuth = () => {
     }, [authContext, loading, user]);
 
     const socialSignIn = useCallback(
-        (provider: SocialSignInProvider): Promise<User> => {
-            return new Promise<User>((resolve, reject) => {
+        (provider: SocialSignInProvider): Promise<HTMLDocument> => {
+            return new Promise<HTMLDocument>((resolve, reject) => {
                 loading(true);
 
                 AuthApi.socialSignIn(provider).response$.subscribe(
-                    (user: User) => {
+                    ({ success, data: html }: BackendSuccess<HTMLDocument>) => {
                         loading(false);
 
-                        if (user) {
-                            setIsSignedIn(true);
-                            setUser(user);
-                            authContext.setUser(user);
-                            authContext.setIsSignedIn(true);
+                        if (!success || !html) {
+                            reject();
+                        } else {
+                            authContext.setSocialSignInPage(html);
+                            resolve(html);
                         }
-
-                        resolve(user);
                     },
                     (err: BackendError<any>) => {
                         loading(false);
@@ -146,6 +148,8 @@ const useAuth = () => {
         setUser,
         isSignedIn,
         setIsSignedIn,
+        socialSignInPage,
+        setSocialSignInPage,
         signIn,
         signOut,
         socialSignIn

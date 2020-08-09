@@ -13,6 +13,7 @@ const AuthContext = createContext<IAuthContext>({
     isSignedIn: false,
     setUser: (user: User | null) => {},
     setIsSignedIn: (isSignedIn: boolean) => {},
+    setSocialSignInPage: (page: HTMLDocument): void => {},
     signIn: (signInInfo: SignInInfo): Promise<User> => {
         return new Promise<User>((resolve, reject) => {});
     },
@@ -20,7 +21,7 @@ const AuthContext = createContext<IAuthContext>({
         return new Promise<User>((resolve, reject) => {});
     },
     socialSignIn: (provider: SocialSignInProvider) => {
-        return new Promise<User>((resolve, reject) => {});
+        return new Promise<HTMLDocument>((resolve, reject) => {});
     }
 });
 
