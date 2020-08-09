@@ -10,7 +10,7 @@ const SocialSignIn: React.FC = () => {
     const { socialSignInPage } = useAuth();
 
     return (
-        <Page pageTitle="Sign In">
+        <Page pageTitle="Sign In" full={true}>
             {socialSignInPage && (
                 <div
                     dangerouslySetInnerHTML={{
