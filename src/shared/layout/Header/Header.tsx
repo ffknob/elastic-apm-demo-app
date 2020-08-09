@@ -211,7 +211,6 @@ const Header: React.FC = props => {
     ];
 
     const userAccountPopoverOnFinishHandler = () => {
-        console.log('userAccountPopoverOnFinishHandler');
         setIsUserAccountPopoverOpen(false);
     };
 

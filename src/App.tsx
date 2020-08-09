@@ -58,33 +58,37 @@ const App: React.FC = () => {
                         socialSignIn
                     }}>
                     <Router>
-                        <EuiFlexGroup direction="column">
-                            <EuiFlexItem grow={false}>
-                                <Header />
-                            </EuiFlexItem>
-                            <EuiFlexItem>
-                                <Switch>
-                                    <Body>
-                                        <Route path="/" exact>
-                                            <Home />
-                                        </Route>
-                                        <Route path="/simulate" exact>
-                                            <Simulation />
-                                        </Route>
-                                        <Route path="/signin/social" exact>
-                                            <SocialSignIn />
-                                        </Route>
-                                        <Route path="/auth" exact>
-                                            <div>Auth</div>
-                                        </Route>
-                                        <Redirect to="/" />
-                                    </Body>
-                                </Switch>
-                            </EuiFlexItem>
-                            <EuiFlexItem grow={false}>
-                                <Footer />
-                            </EuiFlexItem>
-                        </EuiFlexGroup>
+                        <Switch>
+                            <Route path="/signin/social" exact>
+                                <SocialSignIn />
+                            </Route>
+                            <Route>
+                                <EuiFlexGroup direction="column">
+                                    <EuiFlexItem grow={false}>
+                                        <Header />
+                                    </EuiFlexItem>
+                                    <EuiFlexItem>
+                                        <Switch>
+                                            <Body>
+                                                <Route path="/" exact>
+                                                    <Home />
+                                                </Route>
+                                                <Route path="/simulate" exact>
+                                                    <Simulation />
+                                                </Route>
+                                                <Route path="/auth" exact>
+                                                    <div>Auth</div>
+                                                </Route>
+                                                <Redirect to="/" />
+                                            </Body>
+                                        </Switch>
+                                    </EuiFlexItem>
+                                    <EuiFlexItem grow={false}>
+                                        <Footer />
+                                    </EuiFlexItem>
+                                </EuiFlexGroup>
+                            </Route>
+                        </Switch>
                     </Router>
                 </AuthContext.Provider>
             </AppContext.Provider>

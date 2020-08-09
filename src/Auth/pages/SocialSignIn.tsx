@@ -9,15 +9,22 @@ import './SocialSignIn.scss';
 const SocialSignIn: React.FC = () => {
     const { socialSignInPage } = useAuth();
 
+    //return (
+    //    <Page pageTitle="Sign In">
+    //        {socialSignInPage && (
+    //            <div
+    //                dangerouslySetInnerHTML={{
+    //                    __html: socialSignInPage.toString()
+    //                }}></div>
+    //        )}
+    //    </Page>
+    //);
+
     return (
-        <Page pageTitle="Sign In" full={true}>
-            {socialSignInPage && (
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: socialSignInPage.toString()
-                    }}></div>
-            )}
-        </Page>
+        <div
+            dangerouslySetInnerHTML={{
+                __html: socialSignInPage ? socialSignInPage.toString() : ''
+            }}></div>
     );
 };
 
