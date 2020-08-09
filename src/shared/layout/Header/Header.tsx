@@ -45,6 +45,10 @@ const Header: React.FC = props => {
         ]
     );
 
+    const [isUserAccountPopoverOpen, setIsUserAccountPopoverOpen] = useState<
+        boolean
+    >(false);
+
     const history = useHistory();
 
     const authContext: IAuthContext = useContext(AuthContext);
@@ -206,6 +210,11 @@ const Header: React.FC = props => {
         <EuiHeaderLogo iconType="logoElastic">Elastic APM Demo</EuiHeaderLogo>
     ];
 
+    const userAccountPopoverOnFinishHandler = () => {
+        console.log('userAccountPopoverOnFinishHandler');
+        setIsUserAccountPopoverOpen(false);
+    };
+
     return (
         <EuiHeader
             position="fixed"
@@ -217,9 +226,20 @@ const Header: React.FC = props => {
                 {
                     items: [
                         <UserAccountPopoverButton
+                            isPopoverOpen={isUserAccountPopoverOpen}
+                            onPopoverOpen={() =>
+                                setIsUserAccountPopoverOpen(true)
+                            }
+                            onPopoverClose={() =>
+                                setIsUserAccountPopoverOpen(false)
+                            }
                             signedInPopoverContent={<SignedInPopoverContent />}
                             notSignedInPopoverContent={
-                                <NotSignedInPopoverContent />
+                                <NotSignedInPopoverContent
+                                    onFinish={() =>
+                                        userAccountPopoverOnFinishHandler()
+                                    }
+                                />
                             }
                         />
                     ]

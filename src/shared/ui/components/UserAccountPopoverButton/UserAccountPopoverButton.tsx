@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { EuiButtonEmpty, EuiPopover } from '@elastic/eui';
 
@@ -7,6 +7,9 @@ import { useAuth } from '../../../hooks';
 import './UserAccountPopoverButton.scss';
 
 export interface UserAccountPopoverButtonProps {
+    isPopoverOpen: boolean;
+    onPopoverOpen: () => void;
+    onPopoverClose: () => void;
     signedInPopoverContent: React.ReactNode;
     notSignedInPopoverContent: React.ReactNode;
 }
@@ -14,9 +17,13 @@ export interface UserAccountPopoverButtonProps {
 const UserAccountPopoverButton: React.FC<UserAccountPopoverButtonProps> = (
     props: UserAccountPopoverButtonProps
 ) => {
-    const { signedInPopoverContent, notSignedInPopoverContent } = props;
-
-    const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+    const {
+        isPopoverOpen: _isPopoverOpen,
+        onPopoverOpen,
+        onPopoverClose,
+        signedInPopoverContent,
+        notSignedInPopoverContent
+    } = props;
 
     const {
         user,
@@ -27,10 +34,26 @@ const UserAccountPopoverButton: React.FC<UserAccountPopoverButtonProps> = (
         signOut
     } = useAuth();
 
+    const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(_isPopoverOpen);
+
+    useEffect(() => setIsPopoverOpen(_isPopoverOpen), [_isPopoverOpen]);
+
+    const openPopoverHandler = () => {
+        setIsPopoverOpen(true);
+        onPopoverOpen();
+    };
+
+    const closePopoverHandler = () => {
+        setIsPopoverOpen(false);
+        onPopoverClose();
+    };
+
     const button = (
         <EuiButtonEmpty
             iconType="user"
-            onClick={() => setIsPopoverOpen(!isPopoverOpen)}></EuiButtonEmpty>
+            onClick={() =>
+                isPopoverOpen ? closePopoverHandler() : openPopoverHandler()
+            }></EuiButtonEmpty>
     );
 
     return (
@@ -38,7 +61,7 @@ const UserAccountPopoverButton: React.FC<UserAccountPopoverButtonProps> = (
             ownFocus
             button={button}
             isOpen={isPopoverOpen}
-            closePopover={() => setIsPopoverOpen(false)}
+            closePopover={() => closePopoverHandler()}
             anchorPosition="downRight">
             {isSignedIn ? signedInPopoverContent : notSignedInPopoverContent}
         </EuiPopover>

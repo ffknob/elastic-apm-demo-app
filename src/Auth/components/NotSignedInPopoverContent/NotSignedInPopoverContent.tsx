@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 
 import {
     EuiFormFieldset,
@@ -17,12 +18,17 @@ import { useAuth } from '../../../shared/hooks';
 import './NotSignedInPopoverContent.scss';
 import { SocialSignInProvider } from '@ffknob/elastic-apm-demo-shared';
 
-export interface NotSignedInPopoverContentProps {}
+export interface NotSignedInPopoverContentProps {
+    onFinish: () => void;
+}
 
 const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
     props: NotSignedInPopoverContentProps
 ) => {
     const { signIn, socialSignIn } = useAuth();
+    const history = useHistory();
+
+    const { onFinish } = props;
 
     const [username, setUsername] = useState<string | undefined>();
     const [password, setPassword] = useState<string | undefined>();
@@ -32,7 +38,10 @@ const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
 
     const socialSignInHandler = (provider: SocialSignInProvider) => {
         socialSignIn(provider)
-            .then(html => console.log(html))
+            .then((html: HTMLDocument) => {
+                onFinish();
+                history.push('/signin/social');
+            })
             .catch(err => console.log(err));
     };
 

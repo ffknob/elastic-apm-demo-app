@@ -20,11 +20,11 @@ const useAuth = () => {
 
     const { loading } = useLoading();
 
-    const [user, setUser] = useState<User | null>(null);
-    const [isSignedIn, setIsSignedIn] = useState(false);
+    const [user, setUser] = useState<User | null>(authContext.user);
+    const [isSignedIn, setIsSignedIn] = useState(authContext.isSignedIn);
     const [socialSignInPage, setSocialSignInPage] = useState<
         HTMLDocument | undefined
-    >(undefined);
+    >(authContext.socialSignInPage);
 
     if (!user && !isSignedIn) {
         const userLocalStorage: string | null = localStorage.getItem('user');
@@ -128,6 +128,7 @@ const useAuth = () => {
                         if (!success || !html) {
                             reject();
                         } else {
+                            setSocialSignInPage(html);
                             authContext.setSocialSignInPage(html);
                             resolve(html);
                         }
@@ -140,7 +141,7 @@ const useAuth = () => {
                 );
             });
         },
-        [authContext, loading]
+        [authContext, loading, socialSignInPage]
     );
 
     return {
