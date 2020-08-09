@@ -64,8 +64,6 @@ const Page: React.FC<PageProps> = (props: PageProps) => {
 
     const page: React.ReactNode = children;
 
-    console.log(pageTitle, full);
-
     return <>{full ? page : euiPage}</>;
 };
 

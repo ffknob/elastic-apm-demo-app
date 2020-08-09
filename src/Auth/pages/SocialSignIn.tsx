@@ -5,6 +5,7 @@ import { useAuth } from '../../shared/hooks';
 import { Page } from '../../shared/layout/Page';
 
 import './SocialSignIn.scss';
+import { Redirect } from 'react-router-dom';
 
 const SocialSignIn: React.FC = () => {
     const { socialSignInPage } = useAuth();
@@ -21,10 +22,12 @@ const SocialSignIn: React.FC = () => {
     //);
 
     return (
-        <div
-            dangerouslySetInnerHTML={{
-                __html: socialSignInPage ? socialSignInPage.toString() : ''
-            }}></div>
+        (socialSignInPage && (
+            <div
+                dangerouslySetInnerHTML={{
+                    __html: socialSignInPage.toString()
+                }}></div>
+        )) || <Redirect to="/" />
     );
 };
 
