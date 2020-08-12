@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 
 import { EuiText, EuiLink } from '@elastic/eui';
 
-import { useAuth } from '../../shared/hooks';
+import { useAuth } from '../../../shared/hooks';
 
-import { Page } from '../../shared/layout';
+import { Page } from '../../../shared/layout';
 
-import './SocialSignIn.scss';
+import './SocialSignInRedirection.scss';
 
-const SocialSignIn: React.FC = () => {
+const SocialSignInRedirection: React.FC = () => {
     const { socialSignInLocation } = useAuth();
 
     useEffect(() => redirectToSocialSignInLocation(), []);
@@ -32,4 +32,4 @@ const SocialSignIn: React.FC = () => {
     );
 };
 
-export default SocialSignIn;
+export default SocialSignInRedirection;

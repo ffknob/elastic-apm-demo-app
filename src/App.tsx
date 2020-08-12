@@ -12,7 +12,9 @@ import { Header } from './shared/layout/Header';
 import { Body } from './shared/layout/Body';
 import { Footer } from './shared/layout/Footer';
 import { Home } from './Home/pages';
-import { SocialSignIn } from './Auth/pages';
+
+import { SignIn } from './Auth/pages';
+import { SocialSignInRedirection } from './Auth/pages';
 
 import Simulation from './Simulation/pages/Simulation';
 
@@ -72,8 +74,14 @@ const App: React.FC = () => {
                                             <Route path="/simulate" exact>
                                                 <Simulation />
                                             </Route>
+                                            <Route path="/signin" exact>
+                                                <SignIn />
+                                            </Route>
                                             <Route path="/signin/social" exact>
-                                                <SocialSignIn />
+                                                <SocialSignInRedirection />
+                                            </Route>
+                                            <Route path="/signin/success" exact>
+                                                <Redirect to="/simulate" />
                                             </Route>
                                             <Redirect to="/" />
                                         </Body>

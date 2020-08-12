@@ -14,6 +14,7 @@ import {
     GenericError,
     SocialSignInProvider
 } from '@ffknob/elastic-apm-demo-shared';
+import { AxiosResponse } from 'axios';
 
 export const signIn = (signInInfo: SignInInfo): Promise<User> => {
     const endpoint = '/users/signin';
