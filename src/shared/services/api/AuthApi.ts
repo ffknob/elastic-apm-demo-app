@@ -8,6 +8,7 @@ import {
     Request,
     BackendSuccess,
     BackendError,
+    BackendRedirect,
     BackendResponse,
     SignInInfo,
     GenericError,
@@ -64,19 +65,17 @@ export const socialSignIn = (provider: SocialSignInProvider): Request<null> => {
     };
 
     request.response$ = from<Promise<BackendResponse>>(
-        Api.post<
-            null,
-            BackendSuccess<HTMLDocument> | BackendError<GenericError<any>>
-        >(request)
-            .then(({ status, statusText, data }: any) => {
-                const backendSuccess: BackendSuccess<User> = {
+        Api.post<null, BackendRedirect<any>>(request)
+            .then(({ status, statusText, data: { location, data } }: any) => {
+                const backendRedirect: BackendRedirect<any> = {
                     success: true,
                     statusCode: status,
                     statusMessage: `${statusText} (${statusText})`,
+                    location,
                     data
                 };
 
-                return backendSuccess;
+                return backendRedirect;
             })
             .catch(
                 ({

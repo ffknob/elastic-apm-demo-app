@@ -7,11 +7,11 @@ import {
 export default interface AuthContext {
     user: User | null;
     isSignedIn: boolean;
-    socialSignInPage?: HTMLDocument;
+    socialSignInLocation?: string;
     setUser: (user: User | null) => void;
     setIsSignedIn: (isSignedIn: boolean) => void;
-    setSocialSignInPage: (page: HTMLDocument) => void;
+    setSocialSignInLocation: (location: string) => void;
     signIn: (signInInfo: SignInInfo) => Promise<User>;
     signOut: () => Promise<User>;
-    socialSignIn: (provider: SocialSignInProvider) => Promise<HTMLDocument>;
+    socialSignIn: (provider: SocialSignInProvider) => Promise<string>;
 }

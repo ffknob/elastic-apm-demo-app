@@ -38,8 +38,9 @@ const NotSignedInPopoverContent: React.FC<NotSignedInPopoverContentProps> = (
 
     const socialSignInHandler = (provider: SocialSignInProvider) => {
         socialSignIn(provider)
-            .then((html: HTMLDocument) => {
+            .then((location: string) => {
                 onFinish();
+
                 history.push('/signin/social');
             })
             .catch(err => console.log(err));

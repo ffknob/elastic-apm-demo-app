@@ -5,7 +5,8 @@ import {
     SignInInfo,
     SocialSignInProvider,
     BackendError,
-    BackendSuccess
+    BackendSuccess,
+    BackendRedirect
 } from '@ffknob/elastic-apm-demo-shared';
 
 import AuthContext from '../context/AuthContext';
@@ -22,9 +23,9 @@ const useAuth = () => {
 
     const [user, setUser] = useState<User | null>(authContext.user);
     const [isSignedIn, setIsSignedIn] = useState(authContext.isSignedIn);
-    const [socialSignInPage, setSocialSignInPage] = useState<
-        HTMLDocument | undefined
-    >(authContext.socialSignInPage);
+    const [socialSignInLocation, setSocialSignInLocation] = useState<
+        string | undefined
+    >(authContext.socialSignInLocation);
 
     if (!user && !isSignedIn) {
         const userLocalStorage: string | null = localStorage.getItem('user');
@@ -117,20 +118,20 @@ const useAuth = () => {
     }, [authContext, loading, user]);
 
     const socialSignIn = useCallback(
-        (provider: SocialSignInProvider): Promise<HTMLDocument> => {
-            return new Promise<HTMLDocument>((resolve, reject) => {
+        (provider: SocialSignInProvider): Promise<string> => {
+            return new Promise<string>((resolve, reject) => {
                 loading(true);
 
                 AuthApi.socialSignIn(provider).response$.subscribe(
-                    ({ success, data: html }: BackendSuccess<HTMLDocument>) => {
+                    ({ success, location }: BackendRedirect<any>) => {
                         loading(false);
 
-                        if (!success || !html) {
+                        if (!success || !location) {
                             reject();
                         } else {
-                            setSocialSignInPage(html);
-                            authContext.setSocialSignInPage(html);
-                            resolve(html);
+                            setSocialSignInLocation(location);
+                            authContext.setSocialSignInLocation(location);
+                            resolve(location);
                         }
                     },
                     (err: BackendError<any>) => {
@@ -141,7 +142,7 @@ const useAuth = () => {
                 );
             });
         },
-        [authContext, loading, socialSignInPage]
+        [authContext, loading, socialSignInLocation]
     );
 
     return {
@@ -149,8 +150,8 @@ const useAuth = () => {
         setUser,
         isSignedIn,
         setIsSignedIn,
-        socialSignInPage,
-        setSocialSignInPage,
+        socialSignInLocation,
+        setSocialSignInLocation,
         signIn,
         signOut,
         socialSignIn

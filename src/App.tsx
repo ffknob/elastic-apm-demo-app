@@ -31,8 +31,8 @@ const App: React.FC = () => {
         setUser,
         isSignedIn,
         setIsSignedIn,
-        socialSignInPage,
-        setSocialSignInPage,
+        socialSignInLocation,
+        setSocialSignInLocation,
         signIn,
         signOut,
         socialSignIn
@@ -51,8 +51,8 @@ const App: React.FC = () => {
                         isSignedIn,
                         setUser,
                         setIsSignedIn,
-                        socialSignInPage,
-                        setSocialSignInPage,
+                        socialSignInLocation,
+                        setSocialSignInLocation,
                         signIn,
                         signOut,
                         socialSignIn

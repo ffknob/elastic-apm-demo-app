@@ -1,33 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
+import { EuiText, EuiLink } from '@elastic/eui';
 
 import { useAuth } from '../../shared/hooks';
 
-import { Page } from '../../shared/layout/Page';
+import { Page } from '../../shared/layout';
 
 import './SocialSignIn.scss';
-import { Redirect } from 'react-router-dom';
 
 const SocialSignIn: React.FC = () => {
-    const { socialSignInPage } = useAuth();
+    const { socialSignInLocation } = useAuth();
 
-    //return (
-    //    <Page pageTitle="Sign In">
-    //        {socialSignInPage && (
-    //            <div
-    //                dangerouslySetInnerHTML={{
-    //                    __html: socialSignInPage.toString()
-    //                }}></div>
-    //        )}
-    //    </Page>
-    //);
+    useEffect(() => redirectToSocialSignInLocation(), []);
+
+    const redirectToSocialSignInLocation = () => {
+        if (socialSignInLocation) {
+            window.location.href = socialSignInLocation;
+        }
+    };
 
     return (
-        (socialSignInPage && (
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: socialSignInPage.toString()
-                }}></div>
-        )) || <Redirect to="/" />
+        <Page pageTitle="Social Sign In">
+            <EuiText>
+                Redirecting to Social Sign In URL.{' '}
+                <EuiLink onClick={() => redirectToSocialSignInLocation()}>
+                    Click here
+                </EuiLink>{' '}
+                if you don't get redirected.
+            </EuiText>
+        </Page>
     );
 };
 
